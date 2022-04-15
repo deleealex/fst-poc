@@ -5,14 +5,11 @@ export interface Pipeline<Input> {
     parse<Output extends Object>(_: ParseJsonFormat): PipelineWithCompletion<Output>;
     castAs<Output extends Input>(_?: { force?: false }): PipelineWithCompletion<Output>;
     castAs<Output>(_: { force: true }): PipelineWithCompletion<Output>;
-    // transform<Output>(callbackFn: (chunk: Input) => Output): PipelineWithCompletion<Output>;
-    // transform<Output>(callbackFn: (chunk: Input) => Promise<Output>): PipelineWithCompletion<Output>;
-    // transform<Output, Return = any, Next = unknown>(callbackFn: (chunk: Input) => Generator<Output, Return, Next>): PipelineWithCompletion<Output>;
-    // transform<Output, Return = any, Next = unknown>(
-    //     callbackFn: (chunk: Input) => AsyncGenerator<Output, Return, Next>
-    // ): PipelineWithCompletion<Output>;
-    // filter(callbackFn: (chunk: Input) => boolean): PipelineWithCompletion<Input>;
-    // filter(callbackFn: (chunk: Input) => Promise<boolean>): PipelineWithCompletion<Input>;
+    transform<Output>(callbackFn: (chunk: Input) => Output | Promise<Output>): PipelineWithCompletion<Output>;
+    transform<Output>(
+        callbackFn: (chunk: Input) => Generator<Output, void, void> | AsyncGenerator<Output, void, void>
+    ): PipelineWithCompletion<Output>;
+    filter(callbackFn: (chunk: Input) => boolean | Promise<boolean>): PipelineWithCompletion<Input>;
 }
 
 export interface ResolvablePipeline {
